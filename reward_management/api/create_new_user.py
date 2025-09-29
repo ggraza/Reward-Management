@@ -83,6 +83,7 @@ def check_registered_user(mobile_number):
         return {
             "approved":False,
             "registered": False,
+            "activate":False,
             "message": f"An error occurred: {str(e)}"
         }
 
@@ -160,7 +161,8 @@ def check_user_registration(mobile_number):
                         # Customer exists but the account is disabled
                         return {
                             "activate":False,
-                            "registered": False,
+                            "registered": True,
+                            "approved": True,
                             "message": "Your account is deactivated. Please contact the admin."
                         }
             
@@ -183,5 +185,7 @@ def check_user_registration(mobile_number):
         frappe.log_error(f"Error in check_user_registration: {str(e)}")
         return {
             "registered": False,
+            "approved":False,
+            "activate":False,
             "message": str(e)  
         }
