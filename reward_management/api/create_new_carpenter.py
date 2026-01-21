@@ -207,8 +207,11 @@ def create_new_carpainters(firstname, lastname, city, mobile):
             "registration_time": frappe.utils.now_datetime().strftime('%H:%M:%S')
         })
         doc.insert()
+        # sent admin sms for the carpenter regiatration request---
+        admin_sms_for_new_carpenter_registration(mobile)
+        frappe.log_error("New Customer Registration Created", f"Mobile: {mobile}, Name: {full_name}")
 
-        frappe.logger().info(f"New Customer created: {mobile}")
+        # frappe.logger().info(f"New Customer created: {mobile}")
 
         return {
             "success": True,
