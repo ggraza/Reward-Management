@@ -8,6 +8,8 @@ def get_company_address():
     company_email = frappe.db.get_single_value("Company Address", "email")
     company_website = frappe.db.get_single_value("Company Address", "website")
     about_company = frappe.db.get_single_value("Company Address","about_company")
+    company_name = frappe.db.get_single_value("Company Address","company_name")
+    description = frappe.db.get_single_value("Company Address","description")
     
     # Fetch child table data
     company_mobile_data = frappe.get_all(
@@ -18,6 +20,8 @@ def get_company_address():
     
     # Prepare the response dictionary
     response = {
+        "company_name": company_name,
+        "description": description,
         "address": company_address,
         "email": company_email,
         "website": company_website,
@@ -28,103 +32,6 @@ def get_company_address():
     return response
 
 # # update or add new company address--------
-# @frappe.whitelist(allow_guest=True)
-# def create_or_update_company_address(address, email, website, mobile_number):
-#     try:
-#         # Try to find existing company address document
-#         company_address = frappe.get_all('Company Address', limit=1)
-        
-#         # If address exists, update it
-#         if company_address:
-#             company_address_doc = frappe.get_all('Company Address')
-#             company_address_doc.address = address
-#             company_address_doc.website = website
-#             company_address_doc.email = email
-#             # Check if the mobile number exists in the child table
-#             existing_mobile = [child for child in company_address_doc.company_mobile_child if child.mobile_number == mobile_number]
-            
-#             if not existing_mobile:
-#                 # If the mobile number does not exist, append a new child table row
-#                 company_address_doc.append("mobile", {
-#                 "doctype": "Company Mobile Child",
-#                 'mobile_number': mobile_number
-#             })
-
-            
-#             # Save the document with updated child table
-#             company_address_doc.save()
-#             return {'status': 'success', 'message': 'Company Address updated successfully.'}
-        
-#         # If no address found, create a new document
-#         else:
-#             new_address_doc = frappe.get_doc({
-#                 'doctype': 'Company Address',
-#                 'address': address,
-#                 'email': email,
-#                 'website': website
-#             })
-            
-#             # Add a new mobile number to the child table
-#             new_address_doc.append("mobile", {
-#                 "doctype": "Company Mobile Child",
-#                 'mobile_number': mobile_number
-#             })
-#             new_address_doc.insert()
-#             return {'status': 'success', 'message': 'Company Address created successfully.'}
-
-#     except Exception as e:
-#         frappe.log_error(frappe.get_traceback(), "create_or_update_company_address")
-#         return {'status': 'error', 'message': f'An error occurred: {str(e)}'}
-
-
-
-# @frappe.whitelist(allow_guest=True)
-# def add_or_update_company_address(address, email, website, mobile_numbers):
-#     try:
-#         # Check if the company address already exists (Assuming it's a single doctype)
-#         company_address_doc = frappe.db.get_single_value("Company Address", "address")
-
-#         if company_address_doc:
-#             # If the company address exists, fetch the document
-#             company_address_doc = frappe.get_doc("Company Address", company_address_doc)
-#             company_address_doc.address = address
-#             company_address_doc.email = email
-#             company_address_doc.website = website
-            
-#             # Update child table (Company Mobile Child)
-#             for mobile in mobile_numbers:
-#                 # Check if this mobile number already exists
-#                 existing_mobile = frappe.get_all("Company Mobile Child", filters={"parent": company_address_doc.name, "mobile_number": mobile})
-                
-#                 if not existing_mobile:
-#                     company_address_doc.append("mobile", {"mobile_number": mobile})
-
-#             company_address_doc.save(ignore_permissions=True)
-
-#             return {'status': 'success', 'message': 'Company Address updated successfully.'}
-
-#         else:
-#             # If no document exists, create a new one
-#             new_address_doc = frappe.get_doc({
-#                 'doctype': 'Company Address',
-#                 'address': address,
-#                 'email': email,
-#                 'website': website
-#             })
-
-#             # Add mobile numbers to the child table
-#             for mobile in mobile_numbers:
-#                 new_address_doc.append("mobile", {"mobile_number": mobile})
-
-#             new_address_doc.insert(ignore_permissions=True)
-
-#             return {'status': 'success', 'message': 'Company Address created successfully.'}
-
-#     except Exception as e:
-#         # Log error for debugging
-#         frappe.log_error(frappe.get_traceback(), "add_or_update_company_address")
-#         return {'status': 'error', 'message': f'An error occurred: {str(e)}'}
-
 
 @frappe.whitelist()
 def add_or_update_company_address(address, email, website, mobile_numbers, about_company):
@@ -189,3 +96,46 @@ def add_or_update_company_address(address, email, website, mobile_numbers, about
         # Log error for debugging
         frappe.log_error(frappe.get_traceback(), "add_or_update_company_address")
         return {'status': 'error', 'message': f'An error occurred: {str(e)}'}
+
+
+# add or update company name and description
+@frappe.whitelist()
+def add_or_update_company_name_description(company_name, description):
+    try:
+        current_user = frappe.session.user
+        
+         # Get current user's roles
+        user_roles = frappe.get_roles(current_user)
+
+        # Allow only Administrator or users with "Admin" role
+        if current_user != "Administrator" and "Admin" not in user_roles:
+            return {"success": False, "message": "Permission denied"}
+        
+        # Check if the company address already exists (Assuming it's a single doctype)
+        company_doc = frappe.db.get_single_value("Company Address", "company_name")
+
+        if company_doc:
+            # If the company address exists, fetch the document
+            company_address_doc = frappe.get_doc("Company Address", company_doc)
+            company_address_doc.company_name = company_name
+            company_address_doc.description = description
+            company_address_doc.save(ignore_permissions=True)
+
+            return {'success': True, 'message': 'Company Name and Description updated successfully.'}
+
+        else:
+            # If no document exists, create a new one
+            new_address_doc = frappe.get_doc({
+                'doctype': 'Company Address',
+                'company_name': company_name,
+                'description': description
+            })
+
+            new_address_doc.insert(ignore_permissions=True)
+
+            return {'success': True, 'message': 'Company Name and Description created successfully.'}
+
+    except Exception as e:
+        # Log error for debugging
+        frappe.log_error(frappe.get_traceback(), "add_or_update_company_name_description")
+        return {'success': False, 'message': f'An error occurred: {str(e)}'}
