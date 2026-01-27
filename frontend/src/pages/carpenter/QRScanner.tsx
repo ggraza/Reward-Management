@@ -84,7 +84,14 @@ const QRScanner = () => {
             setAlertMessage(errorMessage);
             setIsError(true);
             setShowAlert(true);
-          } else {
+          } 
+          else if (productResponse.data.message.success === false) {
+            setAlertTitle("Error");
+            setAlertMessage(productResponse.data.message.message);
+            setIsError(true);
+            setShowAlert(true);
+          }
+          else {
             const productData = productResponse.data;
             // console.log("Scanned QR data", productData);
             setProductTableName(productData.message.product_table_name);

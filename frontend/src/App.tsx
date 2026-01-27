@@ -15,6 +15,7 @@ import PrivateRoutes from './routes/private-routes';
 import AdminProfile from './pages/admin/admindashboards/AdminProfile';
 import AdminDashboard from './pages/admin/admindashboards/AdminDashboard.tsx';
 import ProductMaster from './pages/admin/productdashboards/ProductMaster.tsx';
+import Company from './pages/admin/productdashboards/company.tsx';
 import ProductOrders from './pages/admin/productorderdashboard/ProductOrder.tsx';
 import GiftMaster from './pages/admin/giftdashboard/GiftMaster.tsx';
 import AddGiftProduct from './pages/admin/giftdashboard/AddGiftProduct.tsx';
@@ -179,6 +180,7 @@ fetchWebsiteSettings();
           <Route path='/admin-dashboard' element={<AdminDashboard />} />
           <Route path='/project' element={<Project/>} />
           <Route path='/product-master' element={<ProductMaster />} />
+          <Route path='/company' element={<Company/>} />
           <Route path='/gift-master' element={<GiftMaster />} />
           <Route path='/add-gift-product' element={<AddGiftProduct />} />
           <Route path='/edit-gift-product/:giftId' element={<EditGiftProduct />} />
