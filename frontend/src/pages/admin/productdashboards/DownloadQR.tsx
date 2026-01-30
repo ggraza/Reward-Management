@@ -265,12 +265,23 @@ const DownloadQRCode: React.FC = () => {
         const pageWidth = pdf.internal.pageSize.getWidth();
 
         // -------- COMPANY NAME (TOP LEFT) --------
+        if (currentCompany){
         pdf.setFontSize(14);
-        pdf.text(
-            currentCompany || "Company Name",
-            5,
-            10
-        );
+        // pdf.text(
+        //     currentCompany || "Company Name",
+        //     5,
+        //     10
+        // );
+        const companyText = currentCompany || "Company Name";
+        const x = 5;
+        const y = 10;
+
+        // draw text twice with slight offset
+        pdf.text(companyText, x, y);
+        pdf.text(companyText, x + 0.3, y);
+
+        }
+        
 
         // -------- QR IMAGE (CENTER) --------
         const imageX = (pageWidth - imageWidth) / 2;
@@ -286,17 +297,17 @@ const DownloadQRCode: React.FC = () => {
         );
 
         // -------- QR CODE ID --------
-        pdf.setFontSize(14);
+        pdf.setFontSize(13);
         pdf.text(
             qrCodeID,
             pageWidth / 2,
-            imageY + imageHeight + rowSpacing,
+            imageY + imageHeight + rowSpacing + 2,
             { align: "center" }
         );
 
         // -------- DESCRIPTION --------
         if (currentDescription) {
-            pdf.setFontSize(12);
+            pdf.setFontSize(11.5);
             const descLines = pdf.splitTextToSize(
                 currentDescription,
                 pageWidth - 10
@@ -305,7 +316,10 @@ const DownloadQRCode: React.FC = () => {
             pdf.text(
                 descLines,
                 5,
-                imageY + imageHeight + rowSpacing + 8
+                imageY + imageHeight + rowSpacing + 8,
+                 {
+                lineHeightFactor: 1.2
+            }
             );
         }
     });
