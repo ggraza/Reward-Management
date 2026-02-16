@@ -28,6 +28,7 @@ import { SiSimplelogin } from "react-icons/si";
 
 
 import '../../../assets/css/sidebar.css';
+import path from 'path';
 
 
 const iconStyle = { height: '8px', width: '8px', strokeWidth: '5rem' };
@@ -67,6 +68,12 @@ export const SidebarData = [
         icon: <VscCircle />,
         cName: 'sub-nav'
       },
+      {
+        title: 'QR instruction',
+        path: '/company',
+        icon: <VscCircle />,
+        cName: 'sub-nav'
+      }
     ]
   },
 

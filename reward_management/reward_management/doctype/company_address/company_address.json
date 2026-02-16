@@ -5,11 +5,16 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "address",
-  "email",
+  "company_name",
   "website",
+  "column_break_yvyu",
+  "email",
+  "address",
+  "company_address",
+  "section_break_fkpp",
   "mobile",
-  "about_company"
+  "about_company",
+  "description"
  ],
  "fields": [
   {
@@ -37,13 +42,36 @@
    "fieldname": "about_company",
    "fieldtype": "Long Text",
    "label": "About Company"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "label": "Company Name "
+  },
+  {
+   "fieldname": "column_break_yvyu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_fkpp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "company_address",
+   "fieldtype": "Small Text",
+   "label": "Company Address"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-07-29 14:47:52.672570",
+ "modified": "2026-01-27 16:46:30.865936",
  "modified_by": "Administrator",
  "module": "Reward Management",
  "name": "Company Address",
